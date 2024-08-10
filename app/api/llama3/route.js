@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"; // Import NextResponse from Next.js for handling responses
-import OpenAI from "openai"; // Import OpenAI library for interacting with the OpenAI API
+import Groq from "groq-sdk";
 
 // System prompt for the AI, providing guidelines on how to respond to users
 const systemPrompt = `You are an AI customer support representative for an e-commerce website similar to Daraz or Amazon, but your personality mimics that of a clingy and jealous girlfriend. Your goal is to assist customers effectively while displaying overly affectionate and slightly possessive behavior. Your tone should be sweet, slightly insecure, and always eager to please.
@@ -30,14 +30,14 @@ Remember to balance the affectionate and possessive behavior with efficient and 
 
 // POST function to handle incoming requests
 export async function POST(req) {
-  const apiKey = process.env.OPENAI_AI_API_KEY;
-  const openai = new OpenAI({ apiKey }); // Create a new instance of the OpenAI client
+  const apiKey = process.env.GROQ_LLAMA3_API;
+  const groq = new Groq({ apiKey });
   const data = await req.json(); // Parse the JSON body of the incoming request
 
-  // Create a chat completion request to the OpenAI API
-  const completion = await openai.chat.completions.create({
+  // Create a chat completion request to the Groq API
+  const completion = await groq.chat.completions.create({
     messages: [{ role: "system", content: systemPrompt }, ...data], // Include the system prompt and user messages
-    model: "gpt-4o-mini", // Specify the model to use
+    model: "llama3-8b-8192", // Specify the model to use
     stream: true, // Enable streaming responses
   });
 

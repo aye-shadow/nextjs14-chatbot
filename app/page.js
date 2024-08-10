@@ -19,7 +19,7 @@ export default function Home() {
     ]);
 
     // Send the message to the server
-    const response = fetch("/api", {
+    const response = fetch("/api/llama3", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
