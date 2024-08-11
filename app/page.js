@@ -1,7 +1,9 @@
 "use client";
 import { Box, Button, Stack, TextField } from "@mui/material";
-import { useState } from "react";
-
+import { useState, useEffect, useRef } from "react";
+import RatingComponent from "/Users/nafisabasharanmul/Documents/project3Head_github/app/api/llama3/RatingComponent.js"; // Adjust the path as necessary
+import Lottie from "lottie-react";
+import animationData from "/Users/nafisabasharanmul/Documents/project3Head_github/app/Animation - 1723379024151.json"
 export default function Home() {
   const [history, setHistory] = useState([
     {
@@ -10,17 +12,19 @@ export default function Home() {
     },
   ]);
   const [message, setMessage] = useState("");
+  const [rating, setRating] = useState(0);
+  const chatEndRef = useRef(null);
 
   const sendMessage = async () => {
-    setMessage(""); // Clear the input field
     setHistory((history) => [
       ...history,
       { role: "user", content: message }, // Add the user's message to the chat
       { role: "assistant", content: "" }, // Add a placeholder for the assistant's response
     ]);
 
+    setMessage(""); // Clear the input field
+
     // Send the message to the server
-    // const response = 
     fetch("/api/llama3", {
       method: "POST",
       headers: {
@@ -53,6 +57,12 @@ export default function Home() {
     });
   };
 
+  // Scroll to the bottom of the chat when history updates
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [history]);
 
   return (
     <Box
@@ -62,15 +72,33 @@ export default function Home() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      sx={{ backgroundColor: "#F5C6C6" }} // Nude pink background
     >
       <Stack
         direction={"column"}
         width="500px"
-        height="500px"
-        border="1px solid black"
+        height="700px"
+        border="3px solid black"
         p={2}
         spacing={3}
+        sx={{ backgroundColor: "white" }} // White chat area background
       >
+        <Box
+          sx={{
+            backgroundColor: "pink",
+            width: "100%",
+            padding: "10px",
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "1.2rem",
+            borderRadius: "5px",
+          }}
+        >
+          Chatbot Assistant
+        </Box>
+        <Box display="flex" justifyContent="center">
+          <Lottie animationData={animationData} style={{ width: 200, height: 200 }} />
+        </Box>
         <Stack
           direction={"column"}
           spacing={2}
@@ -96,11 +124,15 @@ export default function Home() {
                 borderRadius={5}
                 px={3}
                 py={2}
+                sx={{
+                  border: "2px solid black",
+                }}
               >
                 {message.content}
               </Box>
             </Box>
           ))}
+          <div ref={chatEndRef} />
         </Stack>
         <Stack direction={"row"} spacing={2}>
           <TextField
@@ -108,12 +140,51 @@ export default function Home() {
             fullWidth
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            sx={{
+              "& .MuiInputBase-root": {
+                backgroundColor: "pink",
+                border: "1px solid black",
+                borderRadius: "4px",
+              },
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "black",
+              },
+            }}
           />
-          <Button variant="contained" onClick={sendMessage}>
+          <Button
+            variant="contained"
+            onClick={sendMessage}
+            sx={{
+              backgroundColor: "black",
+              color: "pink",
+              "&:hover": {
+                backgroundColor: "black",
+              },
+            }}
+          >
             Send
           </Button>
         </Stack>
       </Stack>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          backgroundColor: "salmon",
+          padding: "10px",
+          borderRadius: "5px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "5px",
+        }}
+      >
+        <RatingComponent value={rating} onChange={setRating} />
+        <Box sx={{ color: "black", fontWeight: "bold" }}>
+          Rate our service
+        </Box>
+      </Box>
     </Box>
   );
 }

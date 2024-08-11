@@ -25,15 +25,15 @@ body {
 
 body {
   margin: 0;
-  font-family: sans-serif;
+  font-family: "fantasy" ;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 header {
-  background-color: #f0f0f0; /* Optional: Add background color for header */
-  border-bottom: 1px solid #ddd; /* Optional: Add border to separate header */
+  background-color: #e27396; /* Optional: Add background color for header */
+  border-bottom: 3px black; /* Optional: Add border to separate header */
 }
 
 main {
