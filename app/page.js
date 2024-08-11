@@ -1,9 +1,10 @@
 "use client";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
-import RatingComponent from "/Users/nafisabasharanmul/Documents/project3Head_github/app/api/llama3/RatingComponent.js"; // Adjust the path as necessary
+import RatingComponent from "@/components/ui/RatingComponent"; // Adjust the path as necessary
 import Lottie from "lottie-react";
-import animationData from "/Users/nafisabasharanmul/Documents/project3Head_github/app/Animation - 1723379024151.json"
+import animationData from "@/components/animations/cat.json"
+
 export default function Home() {
   const [history, setHistory] = useState([
     {
@@ -77,7 +78,7 @@ export default function Home() {
       <Stack
         direction={"column"}
         width="500px"
-        height="700px"
+        height="450px"
         border="3px solid black"
         p={2}
         spacing={3}
@@ -96,7 +97,7 @@ export default function Home() {
         >
           Chatbot Assistant
         </Box>
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center" alignItems={'center'} minHeight={100} maxHeight={100} overflow={'hidden'}>
           <Lottie animationData={animationData} style={{ width: 200, height: 200 }} />
         </Box>
         <Stack
@@ -105,6 +106,7 @@ export default function Home() {
           flexGrow={1}
           overflow="auto"
           maxHeight="100%"
+          fontSize={12}
         >
           {history.map((message, index) => (
             <Box
