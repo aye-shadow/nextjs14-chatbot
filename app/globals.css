@@ -21,6 +21,24 @@ body {
     )
     rgb(var(--background-start-rgb)); */
 }
+/* globals.css */
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background-color: #f0f0f0; /* Optional: Add background color for header */
+  border-bottom: 1px solid #ddd; /* Optional: Add border to separate header */
+}
+
+main {
+  flex: 1;
+}
 
 @layer utilities {
   .text-balance {
