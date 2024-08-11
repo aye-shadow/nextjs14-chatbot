@@ -1,6 +1,12 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider, SignedIn, SignedOut, SignIn, UserButton } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignIn,
+  UserButton,
+} from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,9 +30,7 @@ export default function RootLayout({ children }) {
                 <SignIn routing="hash" />
               </div>
             </SignedOut>
-            <SignedIn>
-              {children}
-            </SignedIn>
+            <SignedIn>{children}</SignedIn>
           </main>
         </body>
       </html>
