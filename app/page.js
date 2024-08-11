@@ -3,28 +3,30 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 
 export default function Home() {
-  const [messages, setMessages] = useState([
+  const [history, setHistory] = useState([
     {
       role: "assistant",
-      content: `Hi! I'm the E-Commerse support assistant. How can I help you today?`,
+      content: `Hi! I'm your very own Nextjs14 support assistant! How may I help you today?`,
     },
   ]);
+  const [message, setMessage] = useState("");
 
   const sendMessage = async () => {
     setMessage(""); // Clear the input field
-    setMessages((messages) => [
-      ...messages,
+    setHistory((history) => [
+      ...history,
       { role: "user", content: message }, // Add the user's message to the chat
       { role: "assistant", content: "" }, // Add a placeholder for the assistant's response
     ]);
 
     // Send the message to the server
-    const response = fetch("/api/llama3", {
+    // const response = 
+    fetch("/api/llama3", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify([...messages, { role: "user", content: message }]),
+      body: JSON.stringify([...history, { role: "user", content: message }]),
     }).then(async (res) => {
       const reader = res.body.getReader(); // Get a reader to read the response body
       const decoder = new TextDecoder(); // Create a decoder to decode the response text
@@ -38,9 +40,9 @@ export default function Home() {
         const text = decoder.decode(value || new Uint8Array(), {
           stream: true,
         }); // Decode the text
-        setMessages((messages) => {
-          let lastMessage = messages[messages.length - 1]; // Get the last message (assistant's placeholder)
-          let otherMessages = messages.slice(0, messages.length - 1); // Get all other messages
+        setHistory((history) => {
+          let lastMessage = history[history.length - 1]; // Get the last message (assistant's placeholder)
+          let otherMessages = history.slice(0, history.length - 1); // Get all other history
           return [
             ...otherMessages,
             { ...lastMessage, content: lastMessage.content + text }, // Append the decoded text to the assistant's message
@@ -51,7 +53,6 @@ export default function Home() {
     });
   };
 
-  const [message, setMessage] = useState("");
 
   return (
     <Box
@@ -65,7 +66,7 @@ export default function Home() {
       <Stack
         direction={"column"}
         width="500px"
-        height="700px"
+        height="500px"
         border="1px solid black"
         p={2}
         spacing={3}
@@ -77,7 +78,7 @@ export default function Home() {
           overflow="auto"
           maxHeight="100%"
         >
-          {messages.map((message, index) => (
+          {history.map((message, index) => (
             <Box
               key={index}
               display="flex"
