@@ -3,35 +3,42 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import RatingComponent from "@/components/ui/RatingComponent"; // Adjust the path as necessary
 import Lottie from "lottie-react";
-import animationData from "@/components/animations/cat.json"
+import animationData from "@/components/animations/cat.json";
 
 export default function Home() {
-  const [history, setHistory] = useState([
-    {
-      role: "assistant",
-      content: `Hi! I'm your very own Nextjs14 support assistant! How may I help you today?`,
-    },
-  ]);
-  const [message, setMessage] = useState("");
   const [rating, setRating] = useState(0);
   const chatEndRef = useRef(null);
 
-  const sendMessage = async () => {
-    setHistory((history) => [
-      ...history,
-      { role: "user", content: message }, // Add the user's message to the chat
-      { role: "assistant", content: "" }, // Add a placeholder for the assistant's response
-    ]);
+  const [history, setHistory] = useState([
+    {
+      role: "assistant",
+      content: `Hi! I'm NyaJS, your very own Nextjs14 support assistant! How may I help you today?`,
+    },
+  ]);
+  const [message, setMessage] = useState("");
 
+  const sendMessage = async () => {
+    if (message.trim() === "") return;
+
+    const newMessage = { role: "user", content: message };
+    const old_history = history;
+    setHistory((prevHistory) => [...prevHistory, newMessage]);
+    setHistory((prevHistory) => [
+      ...prevHistory,
+      { role: "assistant", content: "" },
+    ]);
     setMessage(""); // Clear the input field
 
     // Send the message to the server
-    fetch("/api/llama3", {
+    fetch("/api/pinecone", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify([...history, { role: "user", content: message }]),
+      body: JSON.stringify({
+        query: newMessage.content,
+        chat_history: JSON.stringify(old_history),
+      }),
     }).then(async (res) => {
       const reader = res.body.getReader(); // Get a reader to read the response body
       const decoder = new TextDecoder(); // Create a decoder to decode the response text
@@ -97,8 +104,18 @@ export default function Home() {
         >
           Chatbot Assistant
         </Box>
-        <Box display="flex" justifyContent="center" alignItems={'center'} minHeight={100} maxHeight={100} overflow={'hidden'}>
-          <Lottie animationData={animationData} style={{ width: 200, height: 200 }} />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems={"center"}
+          minHeight={100}
+          maxHeight={100}
+          overflow={"hidden"}
+        >
+          <Lottie
+            animationData={animationData}
+            style={{ width: 200, height: 200 }}
+          />
         </Box>
         <Stack
           direction={"column"}
@@ -183,9 +200,7 @@ export default function Home() {
         }}
       >
         <RatingComponent value={rating} onChange={setRating} />
-        <Box sx={{ color: "black", fontWeight: "bold" }}>
-          Rate our service
-        </Box>
+        <Box sx={{ color: "black", fontWeight: "bold" }}>Rate our service</Box>
       </Box>
     </Box>
   );

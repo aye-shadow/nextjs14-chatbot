@@ -11,8 +11,8 @@ import {
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "My Chatbot",
-  description: "Ayesha Ejaz",
+  title: "NyaJS Assistant",
+  description: "by NADE & Co.",
 };
 
 export default function RootLayout({ children }) {
